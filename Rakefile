@@ -4,12 +4,12 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "imgur"
+    gem.name = "vanntastic-imgur"
     gem.summary = %Q{Imgur API interface}
     gem.description = %Q{An interface to the Imgur API}
     gem.email = "jdp34@njit.edu"
     gem.homepage = "http://github.com/jdp/imgur"
-    gem.authors = ["Justin Poliey"]
+    gem.authors = ["Justin Poliey","Vann Ek"]
     gem.add_development_dependency "bacon", ">= 1.1.0"
     gem.add_development_dependency "yard", ">= 0.2.3.5"
     gem.add_development_dependency "curb", ">= 0.5.4.0"

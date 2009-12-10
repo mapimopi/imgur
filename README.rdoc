@@ -1,7 +1,27 @@
 = imgur
 
-Description goes here.
+A simple ruby interface to the imgur image hosting service (http://imgur.com). This is a nice alternative to uploading images and not having to deal with RMagick bs.
 
+== Requirements
+
+* Grab a imgur api key : http://imgur.com/register/api/
+
+== Examples 
+
+    # Uploading an image to imgur from the filesystem
+    
+    img = Imgur::API.new 'YOURAPIKEY'
+    uploaded_img = img.upload_file '/path/to/your/test.jpg'
+    # should return a hash like:
+    # => {"small_thumbnail"=>"http://imgur.com/NfuKFs.png", 
+          "original_image"=>"http://imgur.com/NfuKF.png", 
+          "large_thumbnail"=>"http://imgur.com/NfuKFl.png", 
+          "delete_hash"=>"VAiPkk5NoQ", "imgur_page"=>"http://imgur.com/NfuKF", 
+          "delete_page"=>"http://imgur.com/delete/VAiPkk5NoQ", 
+          "image_hash"=>"NfuKF"}
+    # now you can do something like (if you're using rails):
+    <%= image_tag uploaded_img["small_thumbnail"] %>
+    
 == Note on Patches/Pull Requests
  
 * Fork the project.
