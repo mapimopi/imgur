@@ -33,9 +33,9 @@ module Imgur
 		# @raise [ImgurError]
 		# @return [Hash] Image data
 		def upload_file image_filename
-			c = Curl::Easy.new("http://imgur.com/api/upload.json")
+			c = CURL::Easy.new("http://imgur.com/api/upload.json")
 			c.multipart_form_post = true
-			c.http_post(Curl::PostField.content('key', @api_key), Curl::PostField.file('image', image_filename))
+			c.http_post(CURL::PostField.content('key', @api_key), CURL::PostField.file('image', image_filename))
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
 			response["rsp"]["image"]
@@ -47,8 +47,8 @@ module Imgur
 		# @raise [ImgurError]
 		# @return [Hash] Image data
 		def upload_from_url image_url
-			c = Curl::Easy.new("http://imgur.com/api/upload.json")
-			c.http_post(Curl::PostField.content('key', @api_key), Curl::PostField.content('image', image_url))
+			c = CURL::Easy.new("http://imgur.com/api/upload.json")
+			c.http_post(CURL::PostField.content('key', @api_key), CURL::PostField.content('image', image_url))
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
 			response["rsp"]["image"]
@@ -65,7 +65,7 @@ module Imgur
 		# @return [Array<Hash>] Array of image data hashes
 		def gallery params = {}
 			post_fields = params.collect { |k, v| CGI::escape(k.to_s) + '=' + CGI::escape(v.to_s) }.join('&')
-			c = Curl::Easy.new("http://imgur.com/api/gallery.json?#{post_fields}")
+			c = CURL::Easy.new("http://imgur.com/api/gallery.json?#{post_fields}")
 			c.http_get
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["error"]["error_msg"] if response.key?("error")
@@ -78,7 +78,7 @@ module Imgur
 		# @raise [ImgurError]
 		# @return [Hash] Image statistics
 		def image_stats image_hash
-			c = Curl::Easy.new("http://imgur.com/api/stats/#{image_hash}.json")
+			c = CURL::Easy.new("http://imgur.com/api/stats/#{image_hash}.json")
 			c.http_get
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["error"]["error_msg"] if response.key?("error")
@@ -91,7 +91,7 @@ module Imgur
 		# @param [String] delete_hash Imgur's delete hash of the image
 		# @return [Boolean] Whether or not the image was deleted 
 		def delete image_hash
-			c = Curl::Easy.new("http://imgur.com/api/delete/#{image_hash}.json?key=#{@api_key}")
+			c = CURL::Easy.new("http://imgur.com/api/delete/#{image_hash}.json?key=#{@api_key}")
 			c.http_get
 			response = Crack::JSON.parse c.body_str
 			response["rsp"]["stat"] == "ok"
