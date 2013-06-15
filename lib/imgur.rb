@@ -2,6 +2,10 @@ require 'curb'
 require 'crack/json'
 require 'cgi'
 
+# modules for different approach
+require 'nethttp'
+require 'json'
+
 # @author Justin Poliey
 # Imgur module
 module Imgur
@@ -40,6 +44,27 @@ module Imgur
 			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
 			response["rsp"]["image"]
 		end
+		
+		# Uploads an imgae from local disk
+		# using nethttp and json
+		# 
+		# @param [String] image_filename The filename of the image on disk to upload
+		# @raise [ImgurError]
+		# @return [Hash] Image data
+		# Credits goes to http://code.lancepollard.com/upload-images-to-imgur-with-ruby#LC-23
+	        def upload_file_http file_path
+                  data       = {
+                    :key     => @api_key, :image => File.open(file_path)
+                  }
+                  #headers    = {
+                  #  "Cookie" => "IMGURSESSION=#{cookie}"
+                  #}
+
+                  http       = Net::HTTP.new("imgur.com")
+                  path       = "/api/upload.json"
+                  response   = http.post(path, data)#, headers)
+                  json       = JSON.parse(response.body)["rsp"]["image"] rescue nil
+                end
 		
 		# Uploads a file from a remote URL
 		#
