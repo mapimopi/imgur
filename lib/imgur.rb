@@ -51,19 +51,25 @@ module Imgur
 		# @param [String] image_filename The filename of the image on disk to upload
 		# @raise [ImgurError]
 		# @return [Hash] Image data
+		#
 		# Credits goes to http://code.lancepollard.com/upload-images-to-imgur-with-ruby#LC-23
 	        def upload_file_http file_path
-                  data       = {
-                    :key     => @api_key, :image => File.open(file_path)
-                  }
-                  #headers    = {
-                  #  "Cookie" => "IMGURSESSION=#{cookie}"
-                  #}
+                	data       = {
+                  		:key     => @api_key, :image => File.open(file_path)
+                	}
+                	
+                	# This is commented because header only needed if you want to
+                	# upload images that will be associated with your name
+                	# Imgur use cookie for login
+                	
+                	#headers    = {
+                	#  "Cookie" => "IMGURSESSION=#{cookie}"
+                	#}
 
-                  http       = Net::HTTP.new("imgur.com")
-                  path       = "/api/upload.json"
-                  response   = http.post(path, data)#, headers)
-                  json       = JSON.parse(response.body)["rsp"]["image"] rescue nil
+                	http     = Net::HTTP.new("imgur.com")
+                	path     = "/api/upload.json"
+                	response = http.post(path, data)#, headers)
+                	json     = JSON.parse(response.body)["rsp"]["image"] rescue nil
                 end
 		
 		# Uploads a file from a remote URL
