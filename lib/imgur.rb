@@ -41,7 +41,7 @@ module Imgur
 			response["rsp"]["image"]
 		end
 		
-		
+		# ...
 		def new_upload_file image_filename
 			c = Curl::Easy.new("http://api.imgur.com/3/upload")
 			c.multipart_form_post = true
@@ -51,6 +51,22 @@ module Imgur
 			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
 			response["rsp"]["image"]
 		end
+		
+		# Okay
+		# this is how it looks when using httparty
+		# it's tested and working
+		#begin
+		
+		# require 'httparty'
+		# class Img
+		  # include HTTParty
+		  # base_uri 'https://api.imgur.com'
+		  # headers 'Authorization' => 'Client-ID 8f4e17fa7b0d25a'
+		# end
+		# p Img.post('/3/upload.json', :query => { :image => 'http://profile.ak.fbcdn.net/hprofile-ak-snc7/373192_502937226413107_415748282_q.jpg' })
+		
+		#end
+		# need to rewrite it using curb
 		
 		# Uploads a file from a remote URL
 		#
