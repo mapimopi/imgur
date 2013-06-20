@@ -33,40 +33,14 @@ module Imgur
 		# @raise [ImgurError]
 		# @return [Hash] Image data
 		def upload_file image_filename
-			c = Curl::Easy.new("http://imgur.com/api/upload.json")
+			c = Curl::Easy.new("https://api.imgur.com/3/upload.json")
 			c.multipart_form_post = true
-			c.http_post(Curl::PostField.content('key', @api_key), Curl::PostField.file('image', image_filename))
-			response = Crack::JSON.parse c.body_str
-			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
-			response["rsp"]["image"]
-		end
-		
-		# ...
-		def new_upload_file image_filename
-			c = Curl::Easy.new("http://api.imgur.com/3/upload")
-			c.multipart_form_post = true
-			c.headers['Authorization'] = 'Client-ID ' + #{@api_key}.to_s
+			c.headers['Authorization'] = 'Client-ID #{@api_key}'
 			c.http_post(Curl::PostField.file('image', image_filename))
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
 			response["rsp"]["image"]
 		end
-		
-		# Okay
-		# this is how it looks when using httparty
-		# it's tested and working
-		#begin
-		
-		# require 'httparty'
-		# class Img
-		  # include HTTParty
-		  # base_uri 'https://api.imgur.com'
-		  # headers 'Authorization' => 'Client-ID 8f4e17fa7b0d25a'
-		# end
-		# p Img.post('/3/upload.json', :query => { :image => 'http://profile.ak.fbcdn.net/hprofile-ak-snc7/373192_502937226413107_415748282_q.jpg' })
-		
-		#end
-		# need to rewrite it using curb
 		
 		# Uploads a file from a remote URL
 		#
@@ -74,8 +48,9 @@ module Imgur
 		# @raise [ImgurError]
 		# @return [Hash] Image data
 		def upload_from_url image_url
-			c = Curl::Easy.new("http://imgur.com/api/upload.json")
-			c.http_post(Curl::PostField.content('key', @api_key), Curl::PostField.content('image', image_url))
+			c = Curl::Easy.new("https://api.imgur.com/3/upload.json")
+			c.headers['Authorization'] = 'Client-ID #{@api_key}'
+			c.http_post(Curl::PostField.content('image', image_url))
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["rsp"]["error_msg"] if response["rsp"]["stat"] == "fail"
 			response["rsp"]["image"]
@@ -92,7 +67,8 @@ module Imgur
 		# @return [Array<Hash>] Array of image data hashes
 		def gallery params = {}
 			post_fields = params.collect { |k, v| CGI::escape(k.to_s) + '=' + CGI::escape(v.to_s) }.join('&')
-			c = Curl::Easy.new("http://imgur.com/api/gallery.json?#{post_fields}")
+			c = Curl::Easy.new("https://api.imgur.com/3/gallery.json?#{post_fields}")
+			c.headers['Authorization'] = 'Client-ID #{@api_key}'
 			c.http_get
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["error"]["error_msg"] if response.key?("error")
@@ -105,7 +81,8 @@ module Imgur
 		# @raise [ImgurError]
 		# @return [Hash] Image statistics
 		def image_stats image_hash
-			c = Curl::Easy.new("http://imgur.com/api/stats/#{image_hash}.json")
+			c = Curl::Easy.new("https://api.imgur.com/3/stats/#{image_hash}.json")
+			c.headers['Authorization'] = 'Client-ID #{@api_key}'
 			c.http_get
 			response = Crack::JSON.parse c.body_str
 			raise ImgurError, response["error"]["error_msg"] if response.key?("error")
@@ -118,7 +95,8 @@ module Imgur
 		# @param [String] delete_hash Imgur's delete hash of the image
 		# @return [Boolean] Whether or not the image was deleted 
 		def delete image_hash
-			c = Curl::Easy.new("http://imgur.com/api/delete/#{image_hash}.json?key=#{@api_key}")
+			c = Curl::Easy.new("https://api.imgur.com/3/delete/#{image_hash}.json?key=#{@api_key}")
+			c.headers['Authorization'] = 'Client-ID #{@api_key}'
 			c.http_get
 			response = Crack::JSON.parse c.body_str
 			response["rsp"]["stat"] == "ok"
