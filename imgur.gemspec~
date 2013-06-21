@@ -6,7 +6,7 @@ $:.unshift lib unless $:.include?(lib)
  
 Gem::Specification.new do |s|
   s.name        = "imgur"
-  s.version     = "0.3"
+  s.version     = "3.0.0"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["mapimopi"]
   s.email       = ["mapimopipi@gmail.com"]
@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
  
   s.add_development_dependency "rspec"
  
-  s.files        = Dir.glob("{bin,lib}/**/*") + %w(LICENSE README.md ROADMAP.md CHANGELOG.md)
-  s.executables  = ['imgur']
+  s.files        = Dir.glob("{lib}/**/*")
   s.require_path = 'lib'
 end
